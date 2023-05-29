@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat UI</title>
+
+    <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+    
+            body {
+                background-color: #f5f5f5;
+                font-family: 'Roboto', sans-serif;
+                font-size: 16px;
+                margin: 0;
+            }
+
+            .chat {
+                width: 400px;
+                margin: 50px auto;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            }
+    
+            .chat main {
+                background-color: #fff;
+                height: 500px;
+            }
+    
+            .chat header {
+                background-color: #39f;
+                color: #fff;
+                border-bottom: 1px solid #eee;
+                padding: 20px 30px;
+            }
+    
+            .chat header h4 {
+                color: #777;
+                font-size: 16px;
+                margin: 0;
+            }
+    
+            .chat main {
+                padding: 30px;
+                overflow-y: scroll;
+            }
+    
+            .chat footer {
+                background-color: #fff;
+                border-top: 1px solid #eee;
+                padding: 20px 30px;
+            }
+    
+            .chat footer form {
+                display: flex;
+            }
+    
+            .chat footer form input[type="text"] {
+                background-color: #eee;
+                border: 1px solid #0000;
+                border-radius: 3px;
+                color: #777;
+                flex: 1;
+                font-size: 16px;
+                padding: 15px;
+            }
+    
+            .chat footer form input[type="text"]:focus {
+                background-color: #fff;
+                border: 1px solid #eee;
+                box-sizing: content-box;
+                outline: none;
+            }
+    
+            .chat footer form button {
+                background-color: #0084ff;
+                border: none;
+                border-radius: 3px;
+                color: #fff;
+                font-size: 16px;
+                margin-left: 10px;
+                padding: 15px 20px;
+            }
+    
+            .chat footer form button:hover {
+                background-color: #0073e6;
+                cursor: pointer;
+            }
+    
+            .chat .message {
+                display: flex;
+                margin-bottom: 30px;
+            }
+    
+            .chat .message .message__avatar {
+                margin: 0 10px;
+            }
+    
+            .chat .message .message__avatar img {
+                border-radius: 50%;
+                height: 40px;
+                width: 40px;
+            }
+
+            .chat .message .message__content {
+                background-color: #f5f5f5;
+                border-radius: 3px;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+                display: flex;
+                align-items: center;
+                max-width: 200px;
+            }
+
+            .chat .message .message__bubble {
+                margin: 0;
+                padding: 15px;
+            }
+
+            .chat .message .message__bubble p {
+                color: #777;
+                font-size: 16px;
+                margin: 0;
+            }
+
+            .chat .message.message--self {
+                flex-direction: row-reverse;
+            }
+
+            .chat .message.message--self .message__avatar {
+                margin-left: 10px;
+                margin-right: 0;
+            }
+
+            .chat .message.message--self .message__content {
+                background-color: #0084ff;
+                color: #fff;
+            }
+
+            .chat .message.message--self .message__bubble p {
+                color: #fff;
+            }
+
+            .chat .message.message--self .message__bubble p a {
+                color: #e6f7ff;
+            }
+
+            .chat .message.message--self .message__bubble p a:hover {
+                color: #b3e0ff;
+            }
+
+            .chat .message.message--self .message__bubble p a:active {
+                color: #80ccff;
+            }
+
+            .chat .message.message--self .message__bubble p a:focus {
+                color: #e6f7ff;
+                outline: none;
+            }
+
+            .chat .message.message--self .message__bubble p a:visited {
+                color: #e6f7ff;
+            }
+
+            .chat .message.message--self .message__bubble p a:link {
+                color: #e6f7ff;
+            }
+
+        </style>
+</head>
+<body>
+    <section class="chat">
+        <header>New Chat</header>
+        <main>
+            <div class="message">
+                <div class="message__avatar">
+                    <img src="https://i.pravatar.cc/150?img=1" alt="User avatar">
+                </div>
+                <div class="message__content">
+                    <div class="message__bubble">
+                        <p>Hi, how are you?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="message message--self">
+                <div class="message__content">
+                    <div class="message__bubble">
+                        <p>Hi, I'm fine, thanks!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="message">
+                <div class="message__avatar">
+                    <img src="https://i.pravatar.cc/150?img=1" alt="User avatar">
+                </div>
+                <div class="message__content">
+                    <div class="message__bubble">
+                        <p>What about you?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="message message--self">
+                <div class="message__content">
+                    <div class="message__bubble">
+                        <p>Good too, thanks for asking!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <form>
+                <input type="text" placeholder="Type a message">
+                <button>Send</button>
+            </form>
+        </footer>
+    </section>
+
+    <script>
+        const chat = document.querySelector('.chat');
+        const main = chat.querySelector('main');
+        const form = chat.querySelector('form');
+        const input = form.querySelector('input');
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const message = input.value;
+            if (message) {
+                addMessage(message);
+                input.value = '';
+            }
+        });
+
+        function addMessage(message) {
+            const template = `
+                <div class="message message--self">
+                    <div class="message__content">
+                        <div class="message__bubble">
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            main.insertAdjacentHTML('beforeend', template);
+            main.scrollTop = main.scrollHeight;
+
+            getReply();
+        }
+
+        function addReply(message) {
+            const template = `
+                <div class="message">
+                    <div class="message__avatar">
+                        <img src="https://i.pravatar.cc/150?img=1" alt="User avatar">
+                    </div>
+                    <div class="message__content">
+                        <div class="message__bubble">
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            main.insertAdjacentHTML('beforeend', template);
+            main.scrollTop = main.scrollHeight;
+        }
+
+        function getReply(message) {
+            const url = 'https://api.chucknorris.io/jokes/random';
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const reply = data.value;
+                    addReply(reply);
+                });
+        }
+
+        getReply();
+    </script>
+</body>
+</html>
